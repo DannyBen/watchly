@@ -1,17 +1,18 @@
 module Watchly
   class Changeset
-    attr_reader :added, :removed, :modified
+    attr_reader :added, :removed, :modified, :files
 
     def initialize(added:, removed:, modified:)
       @added    = added.freeze
       @removed  = removed.freeze
       @modified = modified.freeze
+      @files    = (added + modified).freeze
       freeze
     end
 
-    def empty? = added.empty? && removed.empty? && modified.empty?
+    def empty? = files.empty?
     def any? = !empty?
-    def to_h = { added: added, removed: removed, modified: modified }
+    def to_h = { added: added, removed: removed, modified: modified, files: files }
 
     def each
       return enum_for(:each) unless block_given?
