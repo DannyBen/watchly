@@ -1,16 +1,38 @@
 describe Changeset do
-  subject(:empty_subject) { described_class.new(added: [], removed: [], modified: []) }
+  subject(:empty_subject) do
+    described_class.new(added: [], removed: [], modified: [])
+  end
 
-  let(:changed_subject) { described_class.new(added:, removed:, modified:) }
   let(:added)    { ['one more.txt'] }
   let(:removed)  { ['one less.txt'] }
   let(:modified) { ['one different.txt'] }
+
+  let(:changed_subject) do
+    described_class.new(added:, removed:, modified:)
+  end
+
+  let(:removed_only_subject) do
+    described_class.new(added: [], removed:, modified: [])
+  end
+
   let(:events) do
     [
       [:added,    added.first],
       [:removed,  removed.first],
       [:modified, modified.first],
     ]
+  end
+
+  describe '#files' do
+    it 'includes added and modified files' do
+      expect(changed_subject.files)
+        .to match_array(added + modified)
+    end
+
+    it 'excludes removed files' do
+      expect(changed_subject.files)
+        .not_to include(*removed)
+    end
   end
 
   describe '#empty?' do
@@ -20,7 +42,13 @@ describe Changeset do
       end
     end
 
-    context 'when changes registered' do
+    context 'when only removed files are present' do
+      it 'returns true' do
+        expect(removed_only_subject).to be_empty
+      end
+    end
+
+    context 'when added or modified files are present' do
       it 'returns false' do
         expect(changed_subject).not_to be_empty
       end
@@ -28,13 +56,14 @@ describe Changeset do
   end
 
   describe '#any?' do
-    context 'when no changes registered' do
+    context 'when no actionable files exist' do
       it 'returns false' do
         expect(empty_subject).not_to be_any
+        expect(removed_only_subject).not_to be_any
       end
     end
 
-    context 'when changes registered' do
+    context 'when actionable files exist' do
       it 'returns true' do
         expect(changed_subject).to be_any
       end
@@ -42,9 +71,15 @@ describe Changeset do
   end
 
   describe '#to_h' do
-    it 'returns a hash of all changes' do
-      expect(changed_subject.to_h)
-        .to eq({ added: added, modified: modified, removed: removed })
+    it 'returns a hash of all changes and files' do
+      expect(changed_subject.to_h).to eq(
+        {
+          added:    added,
+          removed:  removed,
+          modified: modified,
+          files:    added + modified,
+        }
+      )
     end
   end
 
