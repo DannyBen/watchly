@@ -1,0 +1,6 @@
+# for git-changelog (https://github.com/dannyben/git-changelog)
+export CHANGELOG_COMMIT_URL=https://github.com/dannyben/watchly/commit/%h
+export CHANGELOG_COMPARE_URL=https://github.com/dannyben/watchly/compare/%s
+
+# include the debug gem
+export DEBUGGER=1

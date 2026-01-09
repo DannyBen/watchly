@@ -1,0 +1,72 @@
+describe Changeset do
+  subject(:empty_subject) { described_class.new(added: [], removed: [], modified: []) }
+
+  let(:changed_subject) { described_class.new(added:, removed:, modified:) }
+  let(:added)    { ['one more.txt'] }
+  let(:removed)  { ['one less.txt'] }
+  let(:modified) { ['one different.txt'] }
+  let(:events) do
+    [
+      [:added,    added.first],
+      [:removed,  removed.first],
+      [:modified, modified.first],
+    ]
+  end
+
+  describe '#empty?' do
+    context 'when no changes registered' do
+      it 'returns true' do
+        expect(empty_subject).to be_empty
+      end
+    end
+
+    context 'when changes registered' do
+      it 'returns false' do
+        expect(changed_subject).not_to be_empty
+      end
+    end
+  end
+
+  describe '#any?' do
+    context 'when no changes registered' do
+      it 'returns false' do
+        expect(empty_subject).not_to be_any
+      end
+    end
+
+    context 'when changes registered' do
+      it 'returns true' do
+        expect(changed_subject).to be_any
+      end
+    end
+  end
+
+  describe '#to_h' do
+    it 'returns a hash of all changes' do
+      expect(changed_subject.to_h)
+        .to eq({ added: added, modified: modified, removed: removed })
+    end
+  end
+
+  describe '#each' do
+    context 'when no block is given' do
+      it 'returns an enumerator' do
+        expect(changed_subject.each).to be_an(Enumerator)
+      end
+
+      it 'returns all changes' do
+        expect(changed_subject.each.to_a).to match_array(events)
+      end
+    end
+
+    context 'when a block is given' do
+      it 'yields each change with its type and path' do
+        yielded = changed_subject.each.map do |type, path|
+          [type, path]
+        end
+
+        expect(yielded).to match_array(events)
+      end
+    end
+  end
+end

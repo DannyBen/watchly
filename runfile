@@ -1,0 +1,7 @@
+require 'debug'
+
+title   'Watchly Developer Toolbelt'
+summary 'Runfile tasks for building the Watchly gem'
+
+import_gem 'runfile-tasks/gem'
+import 'debug'
