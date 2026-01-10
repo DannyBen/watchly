@@ -7,6 +7,9 @@ predictable way.
 Watchly is designed around *batch semantics*: when files change, a single
 callback is triggered with a complete description of what changed.
 
+An official command-line interface is available via the
+[watchly-cli][watchly-cli] gem.
+
 ---
 
 ## Installation
@@ -160,3 +163,4 @@ If you experience any issue, have a question, or wish to contribute,
 feel free to [open an issue][issues].
 
 [issues]: https://github.com/dannyben/watchly/issues
+[watchly-cli]: https://github.com/dannyben/watchly-cli
