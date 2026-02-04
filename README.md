@@ -1,5 +1,7 @@
 # Watchly
 
+![repocard](repocard.svg)
+
 Watchly is a lightweight, dependency-free, polling-based file watcher for Ruby.
 It watches one or more glob patterns and reports file changes in a simple,
 predictable way.
